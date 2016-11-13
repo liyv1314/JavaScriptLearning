@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>超级计算器</title>
+		<style type="text/css">
+			div {
+				margin: 50px auto;
+				width: 300px;
+				height: 335px;
+				border: 3px solid darkcyan;
+				border-radius: 10px;
+				background: darkcyan;
+			}
+			table {
+				margin: 10px auto;
+			}
+			table,td {
+				border-collapse: collapse;
+			}
+			table td input {
+				width: 50px;
+				height: 50px;
+				margin-left: 3px;
+				margin-top: 3px;
+				font-size: 20px;
+			}
+			#display {
+				width: 245px;
+				border: 3px solid grey;
+				text-align: right;
+				padding: 10px;
+				margin-bottom: 10px;
+			}
+			#equals {
+				width: 108px;
+			}
+		</style>
+	</head>
+	<body>
+	<div>
+		<table>
+			<tr>
+				<td colspan="5"><input type="text" readonly="readonly" id="display"></td>
+			</tr>
+			<tr>
+				<td><input type="button" value="7" onclick="input('7')"></td>
+				<td><input type="button" value="8" onclick="input('8')"></td>
+				<td><input type="button" value="9" onclick="input('9')"></td>
+				<td><input type="button" value="*" onclick="input('*')"></td>
+				<td><input type="button" value="C" onclick="clearDisplay()"></td>
+			</tr>
+			<tr>
+				<td><input type="button" value="4" onclick="input('4')"></td>
+				<td><input type="button" value="5" onclick="input('5')"></td>
+				<td><input type="button" value="6" onclick="input('6')"></td>
+				<td><input type="button" value="-" onclick="input('-')"></td>
+				<td><input type="button" value="%" onclick="input('%')"></td>
+			</tr>
+			<tr>
+				<td><input type="button" value="1" onclick="input('1')"></td>
+				<td><input type="button" value="2" onclick="input('2')"></td>
+				<td><input type="button" value="3" onclick="input('3')"></td>
+				<td><input type="button" value="+" onclick="input('+')"></td>
+				<td><input type="button" value="DEL" onclick="del()"></td>
+			</tr>
+			<tr>
+				<td><input type="button" value="0" onclick="input('0')"></td>
+				<td><input type="button" value="." onclick="input('.')"></td>
+				<td><input type="button" value="/" onclick="input('/')"></td>
+				<td colspan="2"><input type="button" value="=" id="equals" onclick="cal()"></td>
+			</tr>
+		</table>
+	</div>
+		<script type="text/javascript">
+			ans = "";
+			function input(key){
+				if(ans == "除数不能为0" || ans == "输入错误")
+					ans = "";
+				document.getElementById('display').value = ans = ans + key; 
+			}
+			function clearDisplay(){
+				document.getElementById('display').value = ans = "";
+			}
+			function del(){
+				document.getElementById('display').value = ans =  ans.substr(0,ans.length-1);
+			}
+			function cal(){
+				//判断eval(ans)运算能否进行
+				try{
+					eval(ans);
+				}
+				catch(e){
+					document.getElementById('display').value = ans = "输入错误";
+					return false;
+				}
+				//判断有无.开头的数字
+				if(ans[0] == "." || ans.indexOf("+.")!= -1 || ans.indexOf("-.") != -1 || ans.indexOf("*.") != -1 || ans.indexOf("/.") != -1){
+					document.getElementById('display').value = ans = "输入错误";
+					return false;
+				}
+				//将eval(ans)的结果转为字符串待用
+				res = "" + eval(ans);
+				//8位小数以上保留8位小数
+				// console.log(--res.length + " " + res.indexOf("."));
+				if(res.indexOf(".") != -1 && res.length - 1 - res.indexOf(".") >= 8)
+					ans = "" + eval(ans).toFixed(8);
+				else if(res == "Infinity" && ans[ans.length-1] == "0")
+					ans = "除数不能为0";
+				else
+					ans = res;
+				document.getElementById('display').value = ans;
+			}
+		</script>
+	</body>
+</html>

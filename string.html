@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>字符串</title>
+	</head>
+	<style type="text/css">
+		div {
+			width: 500px;
+			margin: 200px auto;
+		}
+	</style>
+	<body>
+		<div>
+			<form>
+				请输入一个字符串:&nbsp;<input type="text" id="evalstr">&nbsp;<input type="button" value="提交字符串" onclick="cal()">
+				<br>
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;结果为:&nbsp;<input type="text" readonly="readonly" id="display">&nbsp;<input type="reset" value="&nbsp;&nbsp;&nbsp;&nbsp;重&nbsp;&nbsp;置&nbsp;&nbsp;&nbsp;&nbsp;">
+			</form>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	/*负数会被解析*/
+	function cal() {
+		var str = document.getElementById("evalstr").value;
+		var i = 0;
+		var j = 0;
+		// var flag = 0;
+		var nums = new Array();
+		while(i < str.length){
+			var flag = 0;
+			if((isNaN(parseInt(str.substring(i)))||(str[i] == "+"))&& i < str.length){
+				i++;
+				flag = 1;
+			}
+			if(flag == 1)
+				continue;
+			nums[j] = parseInt(str.substring(i));
+			numString = "" + nums[j];
+			i += numString.length;
+			j++;
+		}
+
+		var len = nums.length;
+
+		var sum = 0;
+		for(var i = 0;i < len;i++){
+			sum += nums[i];
+		}
+		// alert(sum);
+		document.getElementById("display").value = sum;
+	}
+</script>

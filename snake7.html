@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>snake</title>
+	<script>
+		window.onload = function() {
+			timer = null;
+			food = null;
+			act = 'rec';
+			begin = document.getElementById('btn1');
+			wrap = document.getElementById('wrap');
+			begin.onclick = start;
+			mode = 'easy';
+
+			easy = document.getElementById('btn2');
+			mid = document.getElementById('btn3');
+			hard = document.getElementById('btn4');
+
+			pause = document.getElementById('btn5');
+			rec = document.getElementById('btn6');
+
+			easy.onclick = function() {
+				mode = 'easy';
+			}
+
+			mid.onclick = function() {
+				mode = 'mid';
+			}
+
+			hard.onclick = function() {
+				mode = 'hard';
+			}
+
+			pause.onclick = function() {
+				act = 'pause';
+			}
+
+			rec.onclick = function() {
+				act = 'rec';
+				clearTimeout(timer);
+				move();
+			}
+
+			function start() {
+				type = 'r';
+				flag = 0;
+				clearTimeout(timer);
+				if(mode == 'hard')
+					add = 17;
+				if(mode == 'mid')
+					add = 7;
+				if(mode == 'easy')
+					add = 0;
+				move();
+			}
+			function move() {
+				snake = document.getElementsByClassName('sk');
+				head = snake[0];
+				tail = snake[snake.length-1];
+
+				if(snake.length + add >= 3)
+					speed = 200;
+				if(snake.length + add >= 10)
+					speed = 100;
+				if(snake.length + add >= 15)
+					speed = 50;
+				if(snake.length + add >= 20)
+					speed = 35;
+				if(snake.length + add >= 30)
+					speed = 25;
+
+				if(!food){
+						food = document.createElement('snake');
+						snake[0].parentNode.appendChild(food);
+						// alert(food);
+						suijishu();
+						function suijishu() {
+							num1 = Math.random();
+							num1 = parseInt(num1*30);
+							num1 *= 20;
+							if(num1 < 420)
+								num1 += 420;
+							if(num1 > 800)
+								num1 = 780;
+							num2 = Math.random();
+							num2 = parseInt(num2*30);
+							num2 *= 20;
+							if(num2 < 20)
+								num2 += 20;
+							if(num2 > 400)
+								num2 = 380;
+						}
+
+						food.className = 'div';
+						food.style.background = 'orange';
+						food.style.left = num1 + 'px';
+						food.style.top = num2 + 'px';
+					}
+					
+					if(type == 'l'){
+						tail.style.left = head.offsetLeft - 20 + 'px';
+						tail.style.top = head.offsetTop + 'px';
+					}	
+					if(type == 'r'){
+						tail.style.left = head.offsetLeft + 20 + 'px';
+						tail.style.top = head.offsetTop + 'px';
+					}
+					if(type == 'u'){
+						tail.style.top = head.offsetTop - 20 + 'px';
+						tail.style.left = head.offsetLeft + 'px';
+					}
+					if(type == 'd'){
+						tail.style.top = head.offsetTop + 20 + 'px';
+						tail.style.left = head.offsetLeft + 'px';
+					}
+
+					if(tail.offsetLeft < 420 || tail.offsetLeft > 800 || tail.offsetTop < 20 || tail.offsetTop > 400){
+						alert('You Lose!');
+						location.reload();
+					}
+
+					for(var n = 0;n < snake.length-1;n++){
+						if(tail.offsetLeft == snake[n].offsetLeft && tail.offsetTop == snake[n].offsetTop){
+							alert('You Lose!');
+							location.reload();
+						}
+					}
+
+					if(food.offsetLeft == head.offsetLeft && food.offsetTop == head.offsetTop){
+						head = food;
+						flag = 1;
+					}
+
+					temp = snake[snake.length-1];
+					snake = document.getElementsByClassName('sk');
+					if(flag == 0){
+						snake[0].parentNode.removeChild(snake[snake.length-1]);
+						snake[0].parentNode.insertBefore(temp,snake[0]);
+					}
+					if(flag == 1){
+						snake[0].parentNode.insertBefore(food,snake[0]);
+						food.className = 'div sk';
+						food.style.background = 'black';
+						flag = 0;
+						food = null;
+					}
+					
+					if(act != 'pause'){
+						timer = setTimeout(move,speed);
+					}
+
+			}
+		}
+		document.onkeydown=function(evt){
+			var e = evt || window.event;
+			if(e && e.keyCode==37 && type != 'r'){
+				// alert('left');
+				type = 'l';
+			}
+			if(e && e.keyCode==38 && type != 'd'){
+				// alert('up');
+				type = 'u';
+			}      
+			if(e && e.keyCode==39 && type != 'l'){
+				// alert('right');
+				type = 'r';
+			}
+			if(e && e.keyCode==40 && type != 'u'){
+				// alert('down');
+				type = 'd';
+			}
+		}
+	</script>
+	<style>
+
+		.btn {
+			width: 80px;
+			height: 50px;
+			margin-top: 20px;
+		}
+
+		body {
+			margin: 0;
+		}
+
+		#wrap {
+			float: left;
+			height: 400px;
+			width: 400px;
+			border: 20px solid grey;
+			margin-left: 400px;
+		}
+
+		.div {
+			border-radius: 7px;
+			width: 20px;
+			height: 20px;
+			background: black;
+			position: absolute;
+		}
+
+		#div1 {
+			left: 460px;
+		}
+
+		#div2 {
+			left: 440px;
+		}
+
+		#div3 {
+			left: 420px;
+		}
+
+		.bar {
+			margin-left: 20px;
+			width: 80px;
+			float: left;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<div class='div sk' id="div1"></div>
+		<div class='div sk' id="div2"></div>
+		<div class='div sk' id="div3"></div>
+	</div>
+	<div class="bar">
+		<input type="button" class="btn" value="start" id="btn1">
+		<input type="button" class="btn" value="easy" id="btn2">
+		<input type="button" class="btn" value="mid" id="btn3">
+		<input type="button" class="btn" value="hard" id="btn4">
+		<input type="button" class="btn" value="pause" id="btn5">
+		<input type="button" class="btn" value="recovery" id="btn6">
+	</div>
+</body>
+</html>
